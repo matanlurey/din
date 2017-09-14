@@ -6,9 +6,10 @@ import 'dart:async';
 
 import 'package:args/args.dart';
 import 'package:build_runner/build_runner.dart';
-import 'package:din/src/generators/resource.dart';
-import 'package:din/src/generators/structure.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'codegen/resource.dart';
+import 'codegen/structure.dart';
 
 /// All-in-one tool for generating API classes for this package.
 ///

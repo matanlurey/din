@@ -17,9 +17,11 @@ dev_dependencies:
   # Scripting in tool/**
   args: ">= 0.13.0 <2.0.0"
   io: ">=0.1.0 <0.3.0"
+  shelf: "^0.7.0"
   shelf_static: "^0.2.0"
 
   # Generators (both in tool/** _and_ lib/src/generators/**)
+  analyzer: "^0.30.0"
   build: "^0.10.0"
   build_runner: ">=0.4.0 <0.6.0"
   code_builder: "^2.0.0-alpha+1"
