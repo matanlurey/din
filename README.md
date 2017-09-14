@@ -40,8 +40,8 @@ generating URLs is handled by offline code generation, and published as part of
 this package.
 
 Implementation:
-* `lib/src/generators/resource.dart`
-* `lib/src/generators/structure.dart`
+* `tool/codegen/resource.dart`
+* `tool/codegen/structure.dart`
 
 The current implementation is fairly ad-hoc, and does not yet support all the
 different use-cases in the Discord API. That is also OK; the API is flexible in
