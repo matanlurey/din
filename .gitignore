@@ -1,0 +1,10 @@
+# Pub CLI.
+.pub/
+.packages
+pubspec.lock
+
+# Used for testing locally only.
+e2e/config.yaml
+
+# Used for code generation locally.
+.dart_tool
