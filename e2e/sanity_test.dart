@@ -25,6 +25,7 @@ Future<Null> main() async {
   String apiToken;
   String channelId;
   String expectChannelName;
+  String expectUserName;
   if (e2eConfig.existsSync()) {
     final yamlConfig = loadYaml(
       e2eConfig.readAsStringSync(),
@@ -32,9 +33,11 @@ Future<Null> main() async {
     apiToken = yamlConfig['api_token'] as String;
     channelId = yamlConfig['channel_id'] as String;
     expectChannelName = yamlConfig['channel_name'] as String;
+    expectUserName = yamlConfig['user_name'] as String;
   } else {
     apiToken = Platform.environment['DISCORD_API_TOKEN'];
     channelId = Platform.environment['DISCORD_CHANNEL_ID'];
+    expectUserName = Platform.environment['DISCORD_USER_NAME'];
   }
   expectChannelName ??= 'bots';
   if (apiToken == null || apiToken.isEmpty) {
@@ -51,8 +54,25 @@ Future<Null> main() async {
     ),
   );
 
+  // Give a second of back-off between API requests.
+  setUp(() => new Future<Null>.delayed(const Duration(seconds: 1)));
+
   test('should retrieve a channel named "$expectChannelName"', () async {
     final channel = await apiClient.channels.getChannel(id: channelId);
     expect(channel.name, expectChannelName);
+  });
+
+  test('should post a message in the channel', () async {
+    final now = new DateTime.now().toIso8601String();
+    final message = await apiClient.channels.createMessage(
+      channelId: channelId,
+      content: 'Hello World @ $now',
+    );
+    expect(message.content, 'Hello World @ $now');
+  });
+
+  test('should retrieve the current user', () async {
+    final user = await apiClient.users.getCurrentUser();
+    expect(user.name, expectUserName);
   });
 }

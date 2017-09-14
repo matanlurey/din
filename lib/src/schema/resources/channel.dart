@@ -6,8 +6,10 @@ import 'dart:async';
 
 import 'package:din/din.dart';
 import 'package:meta/meta.dart';
+
 import '../metadata.dart';
 import '../structures/channel.dart';
+import '../structures/message.dart';
 
 part 'channel.g.dart';
 
@@ -22,7 +24,7 @@ abstract class ChannelsResource {
 
   /// Get a channel by [id].
   ///
-  /// Returns either a _guild channel_ or _dm channel_ object.
+  /// Returns either a [Channel] object.
   @Endpoint(
     method: 'GET',
     path: const [#id],
@@ -30,5 +32,18 @@ abstract class ChannelsResource {
   )
   Future<Channel> getChannel({
     @required String id,
+  });
+
+  /// Creates a message in [channelId] with text [content].
+  ///
+  /// Returns a created [Message] object.
+  @Endpoint.asJson(
+    method: 'POST',
+    path: const [#channelId, 'messages'],
+    docs: '$_resourceBase/channel#create-message',
+  )
+  Future<Message> createMessage({
+    @required String channelId,
+    @required String content,
   });
 }

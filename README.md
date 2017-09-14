@@ -49,7 +49,17 @@ that some of the methods can be implemented by hand if needed, and the others
 are generated.
 
 If you make a change to anything in `lib/src/schema/**` or the code generators
-re-run the build script at `tool/build.dart` to update `<file>.g.dart` files.
+re-run the build script at `tool/build.dart` to update `<file>.g.dart` files:
+
+```sh
+$ dart tool/build.dart
+```
+
+Or, leave a watcher open to automatically rebuild:
+
+```sh
+$ dart tool/build.dart --watch
+```
 
 ### Testing
 
@@ -84,10 +94,10 @@ to avoid overloading Discord's servers from continuous integration systems like
 travis. In order to run manually, or on something like a cron-job, run:
 
 ```sh
-$ DISCORD_API_TOKEN='1234' DISCORD_CHANNEL_ID='1234' pub run test e2e
+$ DISCORD_API_TOKEN='1234' DISCORD_CHANNEL_ID='1234' DISCORD_USER_NAME='...' pub run test e2e
 ```
 
-Note that both variables above must be set as an environment variable to use
+Note that all variables above must be set as an environment variable to use
 these tests. If you do not have one, [login to discord](https://discordapp.com/developers/applications/me)
 and create an application. **Do not share** this token with others, it should
 remain private. Make sure to add access for your bot to connect and interact
@@ -99,6 +109,7 @@ is ignored by `.gitignore` and is for convenience while developing locally.
 ```yaml
 api_token:  "..."
 channel_id: "..."
+user_name:  "..."
 ```
 
 ## Design

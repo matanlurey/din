@@ -44,6 +44,7 @@ class VmHttpClient implements din.HttpClient {
       }
       headers.forEach(request.headers.set);
       if (payload != null) {
+        request.headers.contentType = ContentType.JSON;
         request.write(JSON.encode(payload));
       }
       request.close();
