@@ -79,8 +79,15 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
           return _restClient.request(
             url: '${_getUrl(urlRoot, endPoint.read('path').listValue)}',
             method: '${endPoint.read('method').stringValue}',
+            ${endPoint.read('unusedParametersAreJson').boolValue ? 'json: ${_generateJsonPost(method, endPoint.read('path').listValue)}' : ''}
           ).then((json) => new ${_getStructureName(method.returnType)}.fromJson(json));
         '''));
+
+  static String _generateJsonPost(
+    MethodElement method,
+    List<DartObject> path,
+  ) =>
+      '{${method.parameters.where((e) => !path.any((o) => o.toSymbolValue() == e.name)).map((e) => '\'${e.name}\': ${e.name},').join(',')}},';
 
   static String _getUrl(String root, List<DartObject> path) =>
       ([root]..addAll(path.map((o) {

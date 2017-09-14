@@ -24,12 +24,11 @@ class _$Channel implements Channel {
     build(builder);
     return builder._build();
   }
-  factory _$Channel.fromJson(Map<String, Object> json) {
-    return (new _$ChannelBuilder()
-          ..id = json['id'] as String
-          ..name = json['name'] as String)
-        ._build();
-  }
+  factory _$Channel.fromJson(Map<String, Object> json) =>
+      (new _$ChannelBuilder()
+            ..id = json['id'] as String
+            ..name = json['name'] as String)
+          ._build();
   @override
   final String id;
   @override

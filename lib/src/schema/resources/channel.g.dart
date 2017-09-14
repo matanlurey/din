@@ -18,4 +18,15 @@ class _$ChannelsResource implements ChannelsResource {
         )
         .then((json) => new Channel.fromJson(json));
   }
+
+  @override
+  Future<Message> createMessage({String channelId, String content}) {
+    return _restClient.request(
+      url: 'channels/$channelId/messages',
+      method: 'POST',
+      json: {
+        'content': content,
+      },
+    ).then((json) => new Message.fromJson(json));
+  }
 }

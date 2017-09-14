@@ -5,6 +5,7 @@
 import 'package:meta/meta.dart';
 
 import '../schema/resources/channel.dart';
+import '../schema/resources/user.dart';
 import 'rest_client.dart';
 
 /// A higher-level abstraction on top of [RestClient] for making API calls.
@@ -18,4 +19,7 @@ class ApiClient {
 
   /// Accesses the `channels` resource of the Discord API.
   ChannelsResource get channels => new ChannelsResource(_rest);
+
+  /// Accesses the `users` resource of the Discord API.
+  UsersResource get users => new UsersResource(_rest);
 }
