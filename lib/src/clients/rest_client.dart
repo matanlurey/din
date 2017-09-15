@@ -83,7 +83,7 @@ class RestClient {
   }
 
   /// Make an authenticated HTTP request against a REST endpoint.
-  Future<Map<String, Object>> request({
+  Future< /*Json*/ Object> request({
     @required String method,
     @required String url,
     Map<String, String> query: const {},

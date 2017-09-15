@@ -15,14 +15,9 @@ abstract class User {
   factory User(void build(_$UserBuilder builder)) = _$User;
   factory User.fromJson(Map<String, Object> json) = _$User.fromJson;
 
-  @Field(
-    name: 'id',
-    type: FieldType.snowflake,
-  )
+  @Field(name: 'id')
   String get id;
 
-  @Field(
-    name: 'username',
-  )
+  @Field(name: 'username')
   String get name;
 }

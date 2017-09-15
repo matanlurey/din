@@ -46,4 +46,17 @@ abstract class ChannelsResource {
     @required String channelId,
     @required String content,
   });
+
+  @Endpoint(
+    method: 'GET',
+    path: const [#channelId, 'messages'],
+    docs: '$_resourceBase/channel#get-channel-messages',
+  )
+  Future<List<Message>> getMessages({
+    @required String channelId,
+    String around,
+    String before,
+    String after,
+    int limit,
+  });
 }

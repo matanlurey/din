@@ -16,6 +16,6 @@ class _$UsersResource implements UsersResource {
           url: 'users/@me',
           method: 'GET',
         )
-        .then((json) => new User.fromJson(json));
+        .then((json) => new User.fromJson(json as Map<String, Object>));
   }
 }
