@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -60,5 +61,35 @@ class VmHttpClient implements din.HttpClient {
       }, onError: completer.completeError);
     });
     return completer.operation;
+  }
+}
+
+/// Implements [WebSocketClient] for both the standalone Dart VM and Flutter.
+class VmWebSocketClient implements din.WebSocketClient {
+  static Future<VmWebSocketClient> connect(
+    String url, {
+    Map<String, String> headers: const {},
+  }) async {
+    final socket = await WebSocket.connect(url, headers: headers);
+    return new VmWebSocketClient._(socket);
+  }
+
+  final WebSocket _socket;
+
+  const VmWebSocketClient._(this._socket);
+
+  @override
+  void addJson(Object json) {
+    _socket.add(JSON.encode(json));
+  }
+
+  @override
+  Future<Null> close() async {
+    await _socket.close();
+  }
+
+  @override
+  Stream<Map<String, Object>> get onMessage {
+    return _socket.map((String m) => JSON.decode(m) as Map<String, Object>);
   }
 }

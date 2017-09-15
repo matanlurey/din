@@ -19,9 +19,6 @@ class RestClient {
   static const _recommendedApiVersion = 6;
 
   // ignore: unused_field
-  final AuthScheme _authScheme;
-
-  // ignore: unused_field
   final String _baseUrl;
 
   // ignore: unused_field
@@ -53,6 +50,9 @@ class RestClient {
           userAgent: userAgent,
         );
 
+  /// Authentication type.
+  final AuthScheme auth;
+
   /// Creates a new REST client with a specific base API url.
   ///
   /// Useful for scenarios for testing (i.e. mock server), for proxies, or for
@@ -63,21 +63,19 @@ class RestClient {
   /// [UnsupportedError] is thrown at runtime.
   const RestClient.withBaseUrl(
     this._baseUrl, {
-    @required AuthScheme auth,
+    @required this.auth,
     HttpClient http: const VmHttpClient(),
     UserAgent userAgent: UserAgent.defaultDin,
   })
-      : _authScheme = auth,
-        _http = http,
+      : _http = http,
         _userAgent = userAgent;
 
   /// Returns HTTP headers required by all REST invocations.
   ///
   /// Sub-classes _may_ override to add or modify the headers added.
-  @protected
   Map<String, String> getHttpHeaders() {
     return {
-      'Authorization': _authScheme.headerValue,
+      'Authorization': auth.headerValue,
       'User-Agent': _userAgent.headerValue,
     };
   }
