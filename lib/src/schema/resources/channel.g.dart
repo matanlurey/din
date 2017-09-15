@@ -16,7 +16,7 @@ class _$ChannelsResource implements ChannelsResource {
           url: 'channels/$id',
           method: 'GET',
         )
-        .then((json) => new Channel.fromJson(json));
+        .then((json) => new Channel.fromJson(json as Map<String, Object>));
   }
 
   @override
@@ -27,6 +27,23 @@ class _$ChannelsResource implements ChannelsResource {
       json: {
         'content': content,
       },
-    ).then((json) => new Message.fromJson(json));
+    ).then((json) => new Message.fromJson(json as Map<String, Object>));
+  }
+
+  @override
+  Future<List<Message>> getMessages(
+      {String channelId,
+      String around,
+      String before,
+      String after,
+      int limit}) {
+    return _restClient
+        .request(
+          url: 'channels/$channelId/messages',
+          method: 'GET',
+        )
+        .then((json) => (json as List<Map<String, Object>>)
+            .map((i) => new Message.fromJson(i))
+            .toList());
   }
 }

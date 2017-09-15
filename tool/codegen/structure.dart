@@ -27,6 +27,8 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
       ])).accept(const DartEmitter()).toString();
   }
 
+  static const _$DateTime = const TypeChecker.fromRuntime(DateTime);
+  static const _$Structure = const TypeChecker.fromRuntime(meta.Structure);
   static const _$Field = const TypeChecker.fromRuntime(meta.Field);
 
   static Class _generateBuilder(ClassElement clazz) => new Class((b) => b
@@ -83,7 +85,18 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
             final metadata = _$Field.firstAnnotationOfExact(a);
             final reader = new ConstantReader(metadata);
             final name = reader.read('name').stringValue;
-            return '..${a.name} = json[\'$name\'] as ${a.returnType.displayName}';
+            final element = a.returnType.element;
+            final display = a.returnType.displayName;
+            if (element is ClassElement) {
+              if (element.isEnum) {
+                return '..${a.name} = $display.values[json[\'$name\'] as int]';
+              } else if (_$Structure.hasAnnotationOfExact(element)) {
+                return '..${a.name} = new $display.fromJson(json[\'$name\'] as Map<String, Object>)';
+              } else if (_$DateTime.isExactlyType(a.returnType)) {
+                return '..${a.name} = DateTime.parse(json[\'$name\'] as String)';
+              }
+            }
+            return '..${a.name} = json[\'$name\'] as $display';
           }).join('\n')}
           )._build()
         ''')

@@ -21,7 +21,7 @@ abstract class HttpClient {
   /// Unlike a standard [Future], a [CancelableOperation] may be cancelled if
   /// the in-flight request is no longer valid or wanted. In that event, the
   /// [CancelableOperation.value] may never complete.
-  CancelableOperation<Map<String, Object>> requestJson(
+  CancelableOperation< /*Json*/ Object> requestJson(
     String path, {
     String method: 'GET',
     Map<String, Object> payload,

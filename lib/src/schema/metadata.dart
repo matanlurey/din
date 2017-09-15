@@ -140,26 +140,10 @@ class Field {
   /// Whether the field is nullable.
   ///
   /// By default this is `false`.
-  final bool nullable;
-
-  /// Type of the field.
-  ///
-  /// This is only required when it does not represent either a JSON primitive
-  /// _or_ an existing [Structure] - for example, for timestamps or snowflakes -
-  /// otherwise if omitted field type is inferred from Dart type annotations.
-  final FieldType type;
+  final bool optional;
 
   const Field({
     @required this.name,
-    this.nullable: false,
-    this.type,
+    this.optional: false,
   });
-}
-
-/// Types of [Field].
-///
-/// May be omitted (i.e. `null`) to mean infer from type annotation.
-enum FieldType {
-  timestamp,
-  snowflake,
 }

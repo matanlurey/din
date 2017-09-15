@@ -42,6 +42,7 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
         ..toThis = true))));
 
   static const _$Endpoint = const TypeChecker.fromRuntime(meta.Endpoint);
+  static const _$List = const TypeChecker.fromRuntime(List);
 
   static void _implementEndpoints(
     ClassBuilder b,
@@ -80,7 +81,19 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
             url: '${_getUrl(urlRoot, endPoint.read('path').listValue)}',
             method: '${endPoint.read('method').stringValue}',
             ${endPoint.read('unusedParametersAreJson').boolValue ? 'json: ${_generateJsonPost(method, endPoint.read('path').listValue)}' : ''}
-          ).then((json) => new ${_getStructureName(method.returnType)}.fromJson(json));
+          ).then((json) => ${() {
+            var returnType = method.returnType;
+            if (returnType is ParameterizedType) {
+              assert(returnType.isDartAsyncFuture);
+              returnType = (returnType as ParameterizedType).typeArguments.first;
+            }
+            if (_$List.isExactlyType(returnType)) {
+              final entity = (returnType as ParameterizedType).typeArguments.first;
+              return '(json as List<Map<String, Object>>).map((i) => new ${entity.displayName}.fromJson(i)).toList()';
+            } else {
+              return 'new ${returnType.displayName}.fromJson(json as Map<String, Object>)';
+            }
+          }()});
         '''));
 
   static String _generateJsonPost(

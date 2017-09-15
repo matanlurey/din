@@ -60,6 +60,7 @@ Future<Null> main() async {
   test('should retrieve a channel named "$expectChannelName"', () async {
     final channel = await apiClient.channels.getChannel(id: channelId);
     expect(channel.name, expectChannelName);
+    expect(channel.type, din.ChannelType.guildText);
   });
 
   test('should post a message in the channel', () async {
@@ -74,5 +75,10 @@ Future<Null> main() async {
   test('should retrieve the current user', () async {
     final user = await apiClient.users.getCurrentUser();
     expect(user.name, expectUserName);
+  });
+
+  test('should return previous messages', () async {
+    final messages = await apiClient.channels.getMessages(channelId: channelId);
+    expect(messages, isList);
   });
 }

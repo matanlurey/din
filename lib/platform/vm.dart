@@ -17,7 +17,7 @@ class VmHttpClient implements din.HttpClient {
   const VmHttpClient([this._createHttpClient = _defaultHttpClient]);
 
   @override
-  CancelableOperation<Map<String, Object>> requestJson(
+  CancelableOperation< /*Json*/ Object> requestJson(
     String path, {
     String method: 'GET',
     Map<String, Object> payload,
@@ -26,7 +26,7 @@ class VmHttpClient implements din.HttpClient {
     final client = _createHttpClient();
     var isCancelled = false;
     void Function() onCancel;
-    final completer = new CancelableCompleter<Map<String, Object>>(
+    final completer = new CancelableCompleter< /*Json*/ Object>(
       onCancel: () {
         isCancelled = true;
         if (onCancel != null) {

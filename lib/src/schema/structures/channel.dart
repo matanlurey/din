@@ -15,15 +15,32 @@ abstract class Channel {
   factory Channel(void build(_$ChannelBuilder builder)) = _$Channel;
   factory Channel.fromJson(Map<String, Object> json) = _$Channel.fromJson;
 
-  @Field(
-    name: 'id',
-    type: FieldType.snowflake,
-  )
+  @Field(name: 'id')
   String get id;
 
-  @Field(
-    name: 'name',
-    nullable: true,
-  )
+  @Field(name: 'name', optional: true)
   String get name;
+
+  @Field(name: 'topic', optional: true)
+  String get topic;
+
+  @Field(name: 'type')
+  ChannelType get type;
+
+  @Field(name: 'position')
+  int get position;
+
+  @Field(name: 'bitrate', optional: true)
+  int get bitRate;
+
+  @Field(name: 'userLimit', optional: true)
+  int get userLimit;
+}
+
+enum ChannelType {
+  guildText,
+  directMessage,
+  guildVoice,
+  groupDirectMessage,
+  guildCategory,
 }
