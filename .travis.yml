@@ -2,19 +2,12 @@ language: dart
 sudo: false
 dart:
   - dev
-  - stable
+
 cache:
   directories:
     - $HOME/.pub-cache
-dart_task:
-  - test: --platform vm
-    install_dartium: true
-  - dartanalyzer
-  - dartfmt
-matrix:
-  # Only run dartfmt checks with stable.
-  exclude:
-    - dart: dev
-      dart_task: dartfmt
-    - dart: dev
-      dart_task: dartanalyzer
+
+branches:
+  only: [master]
+
+script: ./tool/travis.sh
