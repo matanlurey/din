@@ -89,6 +89,7 @@ Future<Null> main() async {
 
     final connection = await apiClient.connect(gateway.url);
     expect(await connection.onHello, isList);
+    expect(await connection.onReady, isNotNull);
     await connection.close();
   });
 }

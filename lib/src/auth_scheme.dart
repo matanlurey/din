@@ -10,12 +10,19 @@
 abstract class AuthScheme {
   factory AuthScheme.asBot(String token) = _BotAuthScheme;
 
+  /// HTTP header value.
   String get headerValue;
+
+  /// Token.
+  String get token;
 }
 
 class _BotAuthScheme implements AuthScheme {
-  const _BotAuthScheme(String token) : headerValue = 'Bot $token';
+  const _BotAuthScheme(this.token);
 
   @override
-  final String headerValue;
+  String get headerValue => 'Bot $token';
+
+  @override
+  final String token;
 }

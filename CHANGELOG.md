@@ -1,5 +1,22 @@
 ## 0.1.0-alpha+3
 
+* Added incomplete web socket and gateway support:
+
+```dart
+test('should return a WSS gateway and be able to connect to it', () async {
+  final gateway = await apiClient.gateway.getGatewayBot();
+  expect(gateway.url, isNotEmpty);
+  expect(gateway.shards, greaterThan(0));
+
+  final connection = await apiClient.connect(gateway.url);
+  expect(await connection.onHello, isList);
+  expect(await connection.onReady, isNotNull);
+  await connection.close();
+});
+```
+
+## 0.1.0-alpha+3
+
 * Now exporting structures and resources via the main `din.dart` import.
 * Changes the definition of REST/requestJson to `Object` (may be a `List`)
 * Renamed `Field#nullable` to `Field#optional`.

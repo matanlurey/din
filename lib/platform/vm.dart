@@ -84,7 +84,9 @@ class VmWebSocketClient implements din.WebSocketClient {
   }
 
   @override
-  Future<Null> close() => _socket.close().then((dynamic _) => null);
+  Future<Null> close() async {
+    await _socket.close();
+  }
 
   @override
   Stream<Map<String, Object>> get onMessage {

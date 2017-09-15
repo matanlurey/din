@@ -27,17 +27,20 @@ class GatewayClient {
     String url,
     RestClient rest,
   ) async {
-    final client = await factory(url, headers: rest.getHttpHeaders());
-    return new GatewayClient._(client);
+    final client = await factory(url);
+    return new GatewayClient._(client, rest);
   }
 
+  final RestClient _rest;
   final WebSocketClient _client;
+
   final _onHello = new Completer<List<String>>();
   final _onMessage = new StreamController<GatewayDispatch>.broadcast();
+  final _onReady = new Completer<Object>();
 
   Timer _heartBeat;
 
-  GatewayClient._(this._client) {
+  GatewayClient._(this._client, this._rest) {
     _client.onMessage.listen((message) {
       final dispatch = new GatewayDispatch.fromJson(message);
       switch (dispatch.op) {
@@ -47,11 +50,37 @@ class GatewayClient {
             new Duration(milliseconds: hello['heartbeat_interval'] as int),
             _onHeartBeat,
           );
+          _client.addJson({
+            'op': GatewayOpcode.identify.index,
+            'd': {
+              'token': '${_rest.auth.token}',
+              'properties': {
+                '\$browser': 'disco',
+              },
+              'compress': false,
+              'large_threshold': 50,
+              'shard': [0, 1],
+              'presence': {
+                'status': 'online',
+                'afk': false,
+              }
+            }
+          });
           _onHello.complete(hello['_trace'] as List<String>);
+          break;
+        case GatewayOpcode.dispatch:
+          switch (dispatch.name) {
+            case 'READY':
+              _onReady.complete(dispatch.data);
+              break;
+          }
           break;
         default:
           _onMessage.add(dispatch);
       }
+    }, onDone: () {
+      // TODO: Better error handling.
+      close();
     });
   }
 
@@ -61,6 +90,7 @@ class GatewayClient {
 
   /// Closes the gateway client.
   Future<Null> close() async {
+    _onMessage.close();
     _heartBeat?.cancel();
     _client.close();
   }
@@ -70,4 +100,7 @@ class GatewayClient {
 
   /// Completes on the initial "hello" message with debug information.
   Future<List<String>> get onHello => _onHello.future;
+
+  /// Completes on authentication success.
+  Future<Object> get onReady => _onReady.future;
 }
