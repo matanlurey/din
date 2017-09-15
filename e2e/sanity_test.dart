@@ -88,7 +88,7 @@ Future<Null> main() async {
     expect(gateway.shards, greaterThan(0));
 
     final connection = await apiClient.connect(gateway.url);
-    expect((await connection.onMessage.first).op, din.GatewayOpcode.hello);
+    expect(await connection.onHello, isList);
     await connection.close();
   });
 }

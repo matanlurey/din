@@ -32,13 +32,13 @@ class GatewayClient {
   }
 
   final WebSocketClient _client;
-  final _onHello = new Completer<String>();
+  final _onHello = new Completer<List<String>>();
+  final _onMessage = new StreamController<GatewayDispatch>.broadcast();
 
-  Stream<GatewayDispatch> _stream;
   Timer _heartBeat;
 
   GatewayClient._(this._client) {
-    _stream = _client.onMessage.map((message) {
+    _client.onMessage.listen((message) {
       final dispatch = new GatewayDispatch.fromJson(message);
       switch (dispatch.op) {
         case GatewayOpcode.hello:
@@ -47,12 +47,12 @@ class GatewayClient {
             new Duration(milliseconds: hello['heartbeat_interval'] as int),
             _onHeartBeat,
           );
-          _onHello.complete(hello['_trace'] as String);
-          return null;
+          _onHello.complete(hello['_trace'] as List<String>);
+          break;
         default:
-          return dispatch;
+          _onMessage.add(dispatch);
       }
-    }).where((d) => d != null);
+    });
   }
 
   void _onHeartBeat(Timer _) {
@@ -66,8 +66,8 @@ class GatewayClient {
   }
 
   /// A stream of JSON decoded messages.
-  Stream<GatewayDispatch> get onMessage => _stream;
+  Stream<GatewayDispatch> get onMessage => _onMessage.stream;
 
   /// Completes on the initial "hello" message with debug information.
-  Future<String> get onHello => _onHello.future;
+  Future<List<String>> get onHello => _onHello.future;
 }
