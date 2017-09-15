@@ -1,3 +1,22 @@
+## 0.1.0-alpha+5
+
+* `HttpClient` now throws an `HttpClientException` on an HTTP or network error.
+* `WebSocketClient`, `GatewayClient` now support `Future<String> get onClose`.
+* Added ability to customize the initial identification to `GatewayClient`:
+
+```dart
+doConnect() async {
+  await apiClient.connect(gateway.url, onIdentify: (strategy) {
+    return strategy.asBrowser('...');
+  });
+}
+```
+
+* `GatewayClient#onReady` now returns a `GatewayReady` event.
+* `GatewayClient#onSequence` emits sequence codes, when received. These are
+   used internally to reply to heartbeats, but will also be usable in a future
+   release to do a _resume_ action (instead of an initial connection).
+
 ## 0.1.0-alpha+4
 
 * Added incomplete web socket and gateway support:

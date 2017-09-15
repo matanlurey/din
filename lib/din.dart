@@ -5,15 +5,20 @@
 export 'src/auth_scheme.dart' show AuthScheme;
 export 'src/clients/api_client.dart' show ApiClient;
 export 'src/clients/gateway_client.dart'
-    show GatewayClientFactory, GatewayClient;
-export 'src/clients/http_client.dart' show HttpClient;
+    show
+        GatewayClientFactory,
+        GatewayClient,
+        GatewayIdentify,
+        GatewayIdentifyStrategy,
+        PresenceStatus;
+export 'src/clients/http_client.dart' show HttpClient, HttpClientException;
 export 'src/clients/rest_client.dart' show RestClient;
 export 'src/clients/ws_client.dart' show WebSocketFactory, WebSocketClient;
 export 'src/schema/resources/channel.dart' show ChannelsResource;
 export 'src/schema/resources/user.dart' show UsersResource;
 export 'src/schema/structures/channel.dart' show Channel, ChannelType;
 export 'src/schema/structures/gateway.dart'
-    show GatewayDispatch, Gateway, GatewayOpcode;
+    show GatewayDispatch, Gateway, GatewayOpcode, GatewayReady;
 export 'src/schema/structures/message.dart' show Message;
 export 'src/schema/structures/user.dart' show User;
 export 'src/user_agent.dart' show UserAgent;
