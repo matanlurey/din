@@ -25,6 +25,12 @@ abstract class WebSocketClient {
   /// Closes the web socket.
   Future<Null> close();
 
+  /// Completes when the socket closes.
+  ///
+  /// Returns a string from the socket describing the exception, or `null` if
+  /// the reason is unknown or user-initiated (i.e. the [close] method used).
+  Future<String> get onClose;
+
   /// Stream of JSON messages.
   Stream<Map<String, Object>> get onMessage;
 }

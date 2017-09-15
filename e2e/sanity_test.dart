@@ -89,7 +89,14 @@ Future<Null> main() async {
 
     final connection = await apiClient.connect(gateway.url);
     expect(await connection.onHello, isList);
-    expect(await connection.onReady, isNotNull);
+    expect(
+      await connection.onSequenceUpdate.first,
+      isNotNull,
+      reason: 'Should receive an initial sequence number',
+    );
+    final readyEvent = await connection.onReady;
+    expect(readyEvent.user, isNotNull);
     await connection.close();
+    expect(await connection.onClose, isNull);
   });
 }

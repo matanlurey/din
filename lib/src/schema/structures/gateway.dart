@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../metadata.dart';
+import 'channel.dart';
+import 'user.dart';
 
 part 'gateway.g.dart';
 
@@ -59,4 +61,32 @@ enum GatewayOpcode {
   invalidSession,
   hello,
   heartbeatAck,
+}
+
+@Structure(
+  docs: '$_resourceBase#ready',
+)
+abstract class GatewayReady {
+  factory GatewayReady(
+    void build(_$GatewayReadyBuilder builder),
+  ) = _$GatewayReady;
+
+  factory GatewayReady.fromJson(
+    Map<String, Object> json,
+  ) = _$GatewayReady.fromJson;
+
+  @Field(name: 'v')
+  int get version;
+
+  @Field(name: 'user')
+  User get user;
+
+  @Field(name: 'private_channels')
+  List<Channel> get privateChannels;
+
+  @Field(name: 'session_id')
+  String get sessionId;
+
+  @Field(name: '_trade')
+  List<String> get trace;
 }

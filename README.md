@@ -1,6 +1,38 @@
-# din
+<p align="center">
+  <h1 align="center">din</h1>
+  <p align="center">
+    An <em>unofficial</em> Dart library for <a href="https://discordapp.com/developers">Discord</a>.
+  </p>
+</p>
 
-Dart API for Discord.
+[![Uses Dart 1.25.0-dev](https://img.shields.io/badge/dart-%3E%3D1.25.0-blue.svg)](https://www.dartlang.org/install/archive#dev-channel)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Pub Package](https://img.shields.io/pub/v/din.svg)](https://pub.dartlang.org/packages/din)
+[![Build Status](https://travis-ci.org/matanlurey/din.svg)](https://travis-ci.org/matanlurey/din)
+
+[![GitHub Issues](https://img.shields.io/github/issues/matanlurey/din.svg)](https://github.com/matanlurey/din/issues)
+[![GitHub Forks](https://img.shields.io/github/stars/matanlurey/din.svg)](https://github.com/matanlurey/din/forks)
+[![GitHub Stars](https://img.shields.io/github/stars/matanlurey/din.svg)](https://github.com/matanlurey/din/stars)
+
+
+* [Install](#install)
+* [Usage](#usage)
+* [Contributing](#contributing)
+  * [Testing](#testing)
+
+## Install
+
+The current pre-release of `din` does not require other runtime dependencies.
+
+```yaml
+dependencies:
+  din: ^0.1.0-alpha+5
+```
+
+To get started, it's recommended to read the
+[Discord documentation](https://discordapp.com/developers) and
+[create an application](https://discordapp.com/developers/applications/me) for
+API access.
 
 ## Usage
 

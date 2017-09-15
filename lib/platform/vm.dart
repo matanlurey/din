@@ -52,13 +52,17 @@ class VmHttpClient implements din.HttpClient {
       request.done.then((response) async {
         // TODO: Make this more robust, and throw an HttpException.
         if (response.statusCode >= 400) {
-          final error = '${response.statusCode}: ${response.reasonPhrase}';
-          completer.completeError(error);
+          completer.completeError(new din.HttpClientException(
+            response.statusCode,
+            response.reasonPhrase,
+          ));
           return;
         }
         completer.complete(JSON.decode(await UTF8.decodeStream(response)));
         client.close();
-      }, onError: completer.completeError);
+      }, onError: (Object error) {
+        completer.completeError(new din.HttpClientException.from(error));
+      });
     });
     return completer.operation;
   }
@@ -92,4 +96,15 @@ class VmWebSocketClient implements din.WebSocketClient {
   Stream<Map<String, Object>> get onMessage {
     return _socket.map((String m) => JSON.decode(m) as Map<String, Object>);
   }
+
+  @override
+  Future<String> get onClose => _socket.done.then((Object reason) {
+        if (reason is WebSocket) {
+          return null;
+        }
+        if (reason != null) {
+          return reason.toString();
+        }
+        return _socket.closeReason;
+      });
 }
