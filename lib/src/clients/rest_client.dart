@@ -74,7 +74,6 @@ class RestClient {
   /// Returns HTTP headers required by all REST invocations.
   ///
   /// Sub-classes _may_ override to add or modify the headers added.
-  @protected
   Map<String, String> getHttpHeaders() {
     return {
       'Authorization': _authScheme.headerValue,

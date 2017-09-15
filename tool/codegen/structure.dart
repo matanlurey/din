@@ -94,6 +94,8 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
                 return '..${a.name} = new $display.fromJson(json[\'$name\'] as Map<String, Object>)';
               } else if (_$DateTime.isExactlyType(a.returnType)) {
                 return '..${a.name} = DateTime.parse(json[\'$name\'] as String)';
+              } else if (element.type.isObject) {
+                return '..${a.name} = json[\'$name\']';
               }
             }
             return '..${a.name} = json[\'$name\'] as $display';

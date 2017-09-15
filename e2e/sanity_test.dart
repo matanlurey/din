@@ -81,4 +81,14 @@ Future<Null> main() async {
     final messages = await apiClient.channels.getMessages(channelId: channelId);
     expect(messages, isList);
   });
+
+  test('should return a WSS gateway and be able to connect to it', () async {
+    final gateway = await apiClient.gateway.getGatewayBot();
+    expect(gateway.url, isNotEmpty);
+    expect(gateway.shards, greaterThan(0));
+
+    final connection = await apiClient.connect(gateway.url);
+    expect((await connection.onMessage.first).op, din.GatewayOpcode.hello);
+    await connection.close();
+  });
 }

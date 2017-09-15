@@ -114,11 +114,4 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
               throw new UnsupportedError('Invalid type: ${reader.objectValue}');
             })))
           .join('/');
-
-  static String _getStructureName(DartType type) {
-    if (type is ParameterizedType) {
-      return type.typeArguments.first.displayName;
-    }
-    return type.displayName;
-  }
 }

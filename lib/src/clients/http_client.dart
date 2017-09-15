@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 
-/// Defines the HTTP interface necessary for the API client.
+/// Defines the HTTP interface necessary for the REST client.
 ///
 /// This allows different client implementations on different platforms to
 /// provide their own implementation of HTTP, without relying on `din` to keep
