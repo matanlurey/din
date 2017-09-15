@@ -10,4 +10,4 @@ set -e
 pub upgrade
 dartanalyzer --fatal-warnings .
 dartfmt -n --set-exit-if-changed .
-pub run test
+dart --checked tool/test.dart

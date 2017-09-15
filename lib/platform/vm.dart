@@ -94,7 +94,9 @@ class VmWebSocketClient implements din.WebSocketClient {
 
   @override
   Stream<Map<String, Object>> get onMessage {
-    return _socket.map((String m) => JSON.decode(m) as Map<String, Object>);
+    return _socket.map(
+      (dynamic m) => JSON.decode(m as String) as Map<String, Object>,
+    );
   }
 
   @override
