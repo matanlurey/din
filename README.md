@@ -14,7 +14,6 @@
 [![GitHub Forks](https://img.shields.io/github/stars/matanlurey/din.svg)](https://github.com/matanlurey/din/forks)
 [![GitHub Stars](https://img.shields.io/github/stars/matanlurey/din.svg)](https://github.com/matanlurey/din/stars)
 
-
 * [Install](#install)
 * [Usage](#usage)
 * [Contributing](#contributing)

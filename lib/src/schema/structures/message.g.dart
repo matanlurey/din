@@ -8,6 +8,7 @@ part of 'message.dart';
 
 class _$MessageBuilder {
   String id;
+  String channelId;
   String content;
   User user;
   DateTime timeStamp;
@@ -19,6 +20,7 @@ class _$MessageBuilder {
   _$Message _build() {
     return new _$Message._internal(
       id: id,
+      channelId: channelId,
       content: content,
       user: user,
       timeStamp: timeStamp,
@@ -34,6 +36,7 @@ class _$MessageBuilder {
 class _$Message implements Message {
   const _$Message._internal(
       {this.id,
+      this.channelId,
       this.content,
       this.user,
       this.timeStamp,
@@ -50,6 +53,7 @@ class _$Message implements Message {
   factory _$Message.fromJson(Map<String, Object> json) =>
       (new _$MessageBuilder()
             ..id = json['id'] as String
+            ..channelId = json['channel_id'] as String
             ..content = json['content'] as String
             ..user = new User.fromJson(json['author'] as Map<String, Object>)
             ..timeStamp = DateTime.parse(json['timestamp'] as String)
@@ -61,6 +65,8 @@ class _$Message implements Message {
           ._build();
   @override
   final String id;
+  @override
+  final String channelId;
   @override
   final String content;
   @override
