@@ -18,6 +18,7 @@
 * [Usage](#usage)
 * [Contributing](#contributing)
   * [Testing](#testing)
+  * [Design](#design)
 
 ## Install
 
