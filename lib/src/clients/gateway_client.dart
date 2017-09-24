@@ -76,6 +76,9 @@ class GatewayClient {
           _sendIdentity();
           _onHello.complete(hello['_trace'] as List<String>);
           break;
+        case GatewayOpcode.heartbeat:
+          _client.addJson({'op': GatewayOpcode.heartbeatAck.index});
+          break;
         case GatewayOpcode.dispatch:
           events.add(dispatch);
           break;
@@ -99,7 +102,6 @@ class GatewayClient {
   }
 
   void _onHeartBeat(Timer _) {
-    // TODO: Await ack.
     _client.addJson({
       'op': GatewayOpcode.heartbeat.index,
       'd': _lastSequence,
