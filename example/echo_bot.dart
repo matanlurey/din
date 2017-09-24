@@ -23,7 +23,7 @@ Future<Null> main() async {
   print('Connected! Authenticating...');
 
   final helloTraces = await gatewayClient.onHello;
-  final readyMessage = await gatewayClient.onReady;
+  final readyMessage = await gatewayClient.events.ready.first;
   print('Authenticated! Connected through $helloTraces.');
 
   ProcessSignal.SIGTERM.watch().listen((_) {
@@ -31,7 +31,7 @@ Future<Null> main() async {
     exitCode = 0;
   });
 
-  await for (final message in gatewayClient.onMessage) {
+  await for (final message in gatewayClient.events.messageCreate) {
     if (message.user.id != readyMessage.user.id) {
       apiClient.channels.createMessage(
         channelId: message.channelId,

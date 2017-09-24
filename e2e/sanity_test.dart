@@ -88,13 +88,13 @@ Future<Null> main() async {
     expect(gateway.shards, greaterThan(0));
 
     final connection = await apiClient.connect(gateway.url);
-    expect(await connection.onHello, isList);
+    expect(connection.onHello, completion(isList));
     expect(
-      await connection.onSequenceUpdate.first,
-      isNotNull,
+      connection.onSequenceUpdate.first,
+      completion(isNotNull),
       reason: 'Should receive an initial sequence number',
     );
-    final readyEvent = await connection.onReady;
+    final readyEvent = await connection.events.ready.first;
     expect(readyEvent.user, isNotNull);
     await connection.close();
     expect(await connection.onClose, isNull);
