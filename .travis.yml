@@ -13,11 +13,3 @@ script: dart ./tool/test.dart
 dart_task:
   - dartanalyzer
   - dartfmt
-
-matrix:
-  # Only run dartfmt checks with the current SDK.
-  exclude:
-    - dart: dev
-      dart_task: dartfmt
-    - dart: dev
-      dart_task: dartanalyzer
