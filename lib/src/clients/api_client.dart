@@ -33,6 +33,23 @@ class ApiClient {
   ]) =>
       _gateway(webSocket, '$url?v=6&encoding=json', _rest);
 
+  /// Resumes a connection to the message gateway.
+  Future<GatewayClient> resume(
+    String url,
+    String sessionId,
+    int lastSequence, [
+    WebSocketFactory webSocket = VmWebSocketClient.connect,
+  ]) =>
+      _gateway(
+        webSocket,
+        '$url?v=6&encoding=json',
+        _rest,
+        onIdentify: (strategy) => strategy.resume(
+              sessionId,
+              lastSequence,
+            ),
+      );
+
   /// Accesses the `channels` resource of the Discord API.
   ChannelsResource get channels => new ChannelsResource(_rest);
 

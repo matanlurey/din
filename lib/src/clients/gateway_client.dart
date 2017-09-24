@@ -54,6 +54,9 @@ class GatewayClient {
   GatewayEvents get events => _events;
   GatewayEvents _events;
   Timer _heartBeat;
+
+  /// Last received sequence identifier.
+  int get lastSequence => _lastSequence;
   int _lastSequence;
 
   GatewayClient._(
@@ -93,6 +96,19 @@ class GatewayClient {
 
   void _sendIdentity() {
     final identity = _identify(const GatewayIdentifyStrategy._()).asJson();
+
+    // Resume
+    if (identity.containsKey('session_id')) {
+      _client.addJson({
+        'op': GatewayOpcode.resume.index,
+        'd': <String, Object>{
+          'token': _rest.auth.token,
+        }..addAll(identity),
+      });
+      return;
+    }
+
+    // New identity.
     _client.addJson({
       'op': GatewayOpcode.identify.index,
       'd': <String, Object>{
@@ -150,6 +166,16 @@ class GatewayIdentifyStrategy {
           'status': _toStatusString(status),
           'afk': false,
         },
+      });
+
+  /// Resume a previous session.
+  GatewayIdentify resume(
+    String sessionId,
+    int sequenceId,
+  ) =>
+      new GatewayIdentify._({
+        'session_id': sessionId,
+        'seq': sequenceId,
       });
 }
 
