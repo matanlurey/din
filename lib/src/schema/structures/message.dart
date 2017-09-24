@@ -19,6 +19,9 @@ abstract class Message {
   @Field(name: 'id')
   String get id;
 
+  @Field(name: 'channel_id', optional: true)
+  String get channelId;
+
   @Field(name: 'content')
   String get content;
 

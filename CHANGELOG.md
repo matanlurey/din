@@ -1,3 +1,10 @@
+## 0.1.0-alpha+6
+
+* Added `FakeHttpClient` in `platform/test.dart` for simple testing.
+* Changed `GatewayClient.onMessage` to emit a `Message` payload.
+* Fixed a bug in the heartbeat mechanic.
+* Added `Message#channelId`.
+
 ## 0.1.0-alpha+5
 
 * `HttpClient` now throws an `HttpClientException` on an HTTP or network error.

@@ -7,7 +7,17 @@ cache:
   directories:
     - $HOME/.pub-cache
 
-branches:
-  only: [master]
+# Custom test runner.
+script: dart ./tool/test.dart
 
-script: ./tool/travis.sh
+dart_task:
+  - dartanalyzer
+  - dartfmt
+
+matrix:
+  # Only run dartfmt checks with the current SDK.
+  exclude:
+    - dart: dev
+      dart_task: dartfmt
+    - dart: dev
+      dart_task: dartanalyzer

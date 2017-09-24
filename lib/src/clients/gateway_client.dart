@@ -48,7 +48,7 @@ class GatewayClient {
 
   final GatewayIdentify Function(GatewayIdentifyStrategy strategy) _identify;
   final _onHello = new Completer<List<String>>();
-  final _onMessage = new StreamController<GatewayDispatch>.broadcast();
+  final _onMessage = new StreamController<Message>.broadcast();
   final _onReady = new Completer<GatewayReady>();
   final _onSequenceUpdate = new StreamController<int>.broadcast();
 
@@ -62,6 +62,7 @@ class GatewayClient {
   })
       : _identify = onIdentify {
     _client.onMessage.listen((message) {
+      print(message);
       final dispatch = new GatewayDispatch.fromJson(message);
       switch (dispatch.op) {
         case GatewayOpcode.hello:
@@ -74,16 +75,21 @@ class GatewayClient {
           _onHello.complete(hello['_trace'] as List<String>);
           break;
         case GatewayOpcode.dispatch:
+          final json = dispatch.data as Map<String, Object>;
           switch (dispatch.name) {
             case 'READY':
-              final json = dispatch.data as Map<String, Object>;
               _onSequenceUpdate.add(_lastSequence = dispatch.sequence);
               _onReady.complete(new GatewayReady.fromJson(json));
               break;
+            case 'MESSAGE_CREATE':
+              _onMessage.add(new Message.fromJson(json));
+              break;
+            default:
+            // print('Unhandled message: $message');
           }
           break;
         default:
-          _onMessage.add(dispatch);
+        // print('Unhandled message: $message');
       }
     }, onDone: () {
       // TODO: Better error handling.
@@ -104,7 +110,7 @@ class GatewayClient {
   void _onHeartBeat(Timer _) {
     // TODO: Await ack.
     _client.addJson({
-      'op': GatewayOpcode.heartbeat,
+      'op': GatewayOpcode.heartbeat.index,
       'd': _lastSequence,
     });
   }
@@ -123,7 +129,7 @@ class GatewayClient {
   Future<String> get onClose => _client.onClose; // TODO: Use types not string.
 
   /// A stream of JSON decoded messages.
-  Stream<GatewayDispatch> get onMessage => _onMessage.stream;
+  Stream<Message> get onMessage => _onMessage.stream;
 
   /// Completes on the initial "hello" message with debug information.
   Future<List<String>> get onHello => _onHello.future;
