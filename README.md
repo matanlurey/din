@@ -8,7 +8,7 @@
 [![Uses Dart 1.25.0-dev](https://img.shields.io/badge/dart-%3E%3D1.25.0-blue.svg)](https://www.dartlang.org/install/archive#dev-channel)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Pub Package](https://img.shields.io/pub/v/din.svg)](https://pub.dartlang.org/packages/din)
-[![Build Status](https://travis-ci.org/matanlurey/din.svg)](https://travis-ci.org/matanlurey/din)
+[![Build Status](https://travis-ci.org/matanlurey/din.svg?branch=master)](https://travis-ci.org/matanlurey/din)
 
 [![GitHub Issues](https://img.shields.io/github/issues/matanlurey/din.svg)](https://github.com/matanlurey/din/issues)
 [![GitHub Forks](https://img.shields.io/github/stars/matanlurey/din.svg)](https://github.com/matanlurey/din/forks)
