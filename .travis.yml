@@ -10,6 +10,10 @@ cache:
 # Custom test runner.
 script: dart ./tool/test.dart
 
+# Only building master means that we don't run two builds for each pull request.
+branches:
+  only: [master]
+
 dart_task:
   - dartanalyzer
   - dartfmt
