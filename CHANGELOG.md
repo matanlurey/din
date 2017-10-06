@@ -1,3 +1,9 @@
+## 0.1.0-alpha+7
+
+* Split most of the Gateway events into `GatewayClient.events`.
+* Renamed `GatewayReady` to `Ready`, and moved to `GatewayEvents.ready`.
+* Add support for resuming a connection (`ApiClient.resume`).
+
 ## 0.1.0-alpha+6
 
 * Added `FakeHttpClient` in `platform/test.dart` for simple testing.

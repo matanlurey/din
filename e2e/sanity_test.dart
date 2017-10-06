@@ -82,21 +82,31 @@ Future<Null> main() async {
     expect(messages, isList);
   });
 
-  test('should return a WSS gateway and be able to connect to it', () async {
+  test('should return a WSS gateway, connect, and resume.', () async {
     final gateway = await apiClient.gateway.getGatewayBot();
     expect(gateway.url, isNotEmpty);
     expect(gateway.shards, greaterThan(0));
 
-    final connection = await apiClient.connect(gateway.url);
-    expect(await connection.onHello, isList);
+    var connection = await apiClient.connect(gateway.url);
+    expect(connection.onHello, completion(isList));
     expect(
-      await connection.onSequenceUpdate.first,
-      isNotNull,
+      connection.onSequenceUpdate.first,
+      completion(isNotNull),
       reason: 'Should receive an initial sequence number',
     );
-    final readyEvent = await connection.onReady;
+    final readyEvent = await connection.events.ready.first;
     expect(readyEvent.user, isNotNull);
+    final sessionId = readyEvent.sessionId;
+    final sequenceId = connection.lastSequence;
     await connection.close();
     expect(await connection.onClose, isNull);
+
+    connection = await apiClient.resume(
+      gateway.url,
+      sessionId,
+      sequenceId,
+    );
+    expect(await connection.onHello, isList);
+    await connection.close();
   });
 }

@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:din/din.dart';
 
 import '../schema/structures/gateway.dart';
+import 'gateway_events.dart';
 import 'ws_client.dart';
 
 /// Defines a function that connects to a gateway [url].
@@ -48,11 +49,14 @@ class GatewayClient {
 
   final GatewayIdentify Function(GatewayIdentifyStrategy strategy) _identify;
   final _onHello = new Completer<List<String>>();
-  final _onMessage = new StreamController<Message>.broadcast();
-  final _onReady = new Completer<GatewayReady>();
   final _onSequenceUpdate = new StreamController<int>.broadcast();
 
+  GatewayEvents get events => _events;
+  GatewayEvents _events;
   Timer _heartBeat;
+
+  /// Last received sequence identifier.
+  int get lastSequence => _lastSequence;
   int _lastSequence;
 
   GatewayClient._(
@@ -61,8 +65,9 @@ class GatewayClient {
     GatewayIdentify Function(GatewayIdentifyStrategy strategy) onIdentify,
   })
       : _identify = onIdentify {
+    final events = new StreamController<GatewayDispatch>(sync: true);
+    _events = new GatewayEvents(events.stream, _onSequenceUpdate);
     _client.onMessage.listen((message) {
-      print(message);
       final dispatch = new GatewayDispatch.fromJson(message);
       switch (dispatch.op) {
         case GatewayOpcode.hello:
@@ -74,19 +79,11 @@ class GatewayClient {
           _sendIdentity();
           _onHello.complete(hello['_trace'] as List<String>);
           break;
+        case GatewayOpcode.heartbeat:
+          _client.addJson({'op': GatewayOpcode.heartbeatAck.index});
+          break;
         case GatewayOpcode.dispatch:
-          final json = dispatch.data as Map<String, Object>;
-          switch (dispatch.name) {
-            case 'READY':
-              _onSequenceUpdate.add(_lastSequence = dispatch.sequence);
-              _onReady.complete(new GatewayReady.fromJson(json));
-              break;
-            case 'MESSAGE_CREATE':
-              _onMessage.add(new Message.fromJson(json));
-              break;
-            default:
-            // print('Unhandled message: $message');
-          }
+          events.add(dispatch);
           break;
         default:
         // print('Unhandled message: $message');
@@ -99,6 +96,19 @@ class GatewayClient {
 
   void _sendIdentity() {
     final identity = _identify(const GatewayIdentifyStrategy._()).asJson();
+
+    // Resume
+    if (identity.containsKey('session_id')) {
+      _client.addJson({
+        'op': GatewayOpcode.resume.index,
+        'd': <String, Object>{
+          'token': _rest.auth.token,
+        }..addAll(identity),
+      });
+      return;
+    }
+
+    // New identity.
     _client.addJson({
       'op': GatewayOpcode.identify.index,
       'd': <String, Object>{
@@ -108,7 +118,6 @@ class GatewayClient {
   }
 
   void _onHeartBeat(Timer _) {
-    // TODO: Await ack.
     _client.addJson({
       'op': GatewayOpcode.heartbeat.index,
       'd': _lastSequence,
@@ -117,7 +126,6 @@ class GatewayClient {
 
   /// Closes the gateway client.
   Future<Null> close() async {
-    _onMessage.close();
     _heartBeat?.cancel();
     _client.close();
   }
@@ -128,14 +136,8 @@ class GatewayClient {
   /// the reason is unknown or user-initiated (i.e. the [close] method used).
   Future<String> get onClose => _client.onClose; // TODO: Use types not string.
 
-  /// A stream of JSON decoded messages.
-  Stream<Message> get onMessage => _onMessage.stream;
-
   /// Completes on the initial "hello" message with debug information.
   Future<List<String>> get onHello => _onHello.future;
-
-  /// Completes on authentication success.
-  Future<GatewayReady> get onReady => _onReady.future;
 
   /// A stream of sequence number updates.
   ///
@@ -164,6 +166,16 @@ class GatewayIdentifyStrategy {
           'status': _toStatusString(status),
           'afk': false,
         },
+      });
+
+  /// Resume a previous session.
+  GatewayIdentify resume(
+    String sessionId,
+    int sequenceId,
+  ) =>
+      new GatewayIdentify._({
+        'session_id': sessionId,
+        'seq': sequenceId,
       });
 }
 
