@@ -25,39 +25,55 @@ class GatewayEvents {
       if (event.sequence != null) {
         _onSequenceUpdate.add(event.sequence);
       }
-      switch (event.name) {
-        case 'CHANNEL_CREATE':
-          _channelCreate.add(new Channel.fromJson(
-            event.data as Map<String, Object>,
-          ));
-          break;
-        case 'CHANNEL_UPDATE':
-          _channelUpdate.add(new Channel.fromJson(
-            event.data as Map<String, Object>,
-          ));
-          break;
-        case 'CHANNEL_DELETE':
-          _channelDelete.add(new Channel.fromJson(
-            event.data as Map<String, Object>,
-          ));
-          break;
-        case 'MESSAGE_CREATE':
-          _messageCreate.add(new Message.fromJson(
-            event.data as Map<String, Object>,
-          ));
-          break;
-        case 'MESSAGE_UPDATE':
-          _messageUpdate.add(new Message.fromJson(
-            event.data as Map<String, Object>,
-          ));
-          break;
-        case 'READY':
-          _ready.add(new Ready.fromJson(
-            event.data as Map<String, Object>,
-          ));
-          break;
+      try {
+        _parseEvent(event);
+      } catch (e, s) {
+        // TODO: It would be preferable to only catch precisely parse errors.
+        throw new FormatException(
+          ''
+              'Failed to parse incoming event ${event.name}\n'
+              '\n\n'
+              'Source: $e\n'
+              '$s\n',
+          event.data,
+        );
       }
     });
+  }
+
+  void _parseEvent(GatewayDispatch event) {
+    switch (event.name) {
+      case 'CHANNEL_CREATE':
+        _channelCreate.add(new Channel.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+      case 'CHANNEL_UPDATE':
+        _channelUpdate.add(new Channel.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+      case 'CHANNEL_DELETE':
+        _channelDelete.add(new Channel.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+      case 'MESSAGE_CREATE':
+        _messageCreate.add(new Message.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+      case 'MESSAGE_UPDATE':
+        _messageUpdate.add(new Message.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+      case 'READY':
+        _ready.add(new Ready.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+    }
   }
 
   /// Sent when a new channel is created, relevant to the current user.
