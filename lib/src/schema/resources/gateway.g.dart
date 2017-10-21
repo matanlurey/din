@@ -8,7 +8,9 @@ part of 'gateway.dart';
 
 class _$GatewayResource implements GatewayResource {
   _$GatewayResource(this._restClient);
+
   final RestClient _restClient;
+
   @override
   Future<Gateway> getGateway() {
     return _restClient

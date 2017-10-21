@@ -8,7 +8,9 @@ part of 'user.dart';
 
 class _$UsersResource implements UsersResource {
   _$UsersResource(this._restClient);
+
   final RestClient _restClient;
+
   @override
   Future<User> getCurrentUser() {
     return _restClient
