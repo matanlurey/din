@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import '../schema/structures/channel.dart';
 import '../schema/structures/gateway.dart';
@@ -35,7 +36,7 @@ class GatewayEvents {
               '\n\n'
               'Source: $e\n'
               '$s\n',
-          event.data,
+          JSON.encode(event.data),
         );
       }
     });
