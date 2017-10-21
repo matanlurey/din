@@ -38,5 +38,37 @@ void main() {
       expect(result.bitRate, isNull);
       expect(result.userLimit, isNull);
     });
+
+    test('getMessages', () async {
+      responses['GET fake.api/channels/1234/messages'] = [
+        {
+          'id': '1234',
+          'content': 'Hello World',
+          'author': <String, Object>{},
+          'timestamp': new DateTime.now().toIso8601String(),
+          'mentions_everyone': false,
+          'mentions': <Map<String, Object>>[
+            <String, Object>{},
+          ],
+          'nonce': '1234abcd',
+          'pinned': true,
+          'type': din.MessageType.auto.index,
+        },
+      ];
+      final result = await channels.getMessages(channelId: '1234');
+      expect(result, hasLength(1));
+      expect(result.first, const isInstanceOf<din.Message>());
+      final message = result.first;
+      expect(message.id, '1234');
+      expect(message.content, 'Hello World');
+      expect(message.user, const isInstanceOf<din.User>());
+      expect(message.timeStamp, isNotNull);
+      expect(message.mentionsEveryone, isFalse);
+      expect(message.mentions, hasLength(1));
+      expect(message.mentions.first, const isInstanceOf<din.User>());
+      expect(message.nonce, '1234abcd');
+      expect(message.isPinned, isTrue);
+      expect(message.type, din.MessageType.auto);
+    });
   });
 }

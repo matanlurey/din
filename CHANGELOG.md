@@ -1,5 +1,9 @@
 ## 0.1.0-alpha+7
 
+* Updated to `code_builder: ^2.0.0-alpha+3`.
+
+* Fixed a bug where `List<Structure>` types always returned `List<Map>`. [#11](https://github.com/matanlurey/din/issues/11)
+
 * Split most of the Gateway events into `GatewayClient.events`.
 * Renamed `GatewayReady` to `Ready`, and moved to `GatewayEvents.ready`.
 * Add support for resuming a connection (`ApiClient.resume`).

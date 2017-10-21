@@ -20,7 +20,7 @@ export 'src/schema/resources/user.dart' show UsersResource;
 export 'src/schema/structures/channel.dart' show Channel, ChannelType;
 export 'src/schema/structures/gateway.dart'
     show GatewayDispatch, Gateway, GatewayOpcode;
-export 'src/schema/structures/message.dart' show Message;
+export 'src/schema/structures/message.dart' show Message, MessageType;
 export 'src/schema/structures/ready.dart' show Ready;
 export 'src/schema/structures/user.dart' show User;
 export 'src/user_agent.dart' show UserAgent;

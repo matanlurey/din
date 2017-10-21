@@ -8,12 +8,19 @@ part of 'channel.dart';
 
 class _$ChannelBuilder {
   String id;
+
   String name;
+
   String topic;
+
   ChannelType type;
+
   int position;
+
   int bitRate;
+
   int userLimit;
+
   _$Channel _build() {
     return new _$Channel._internal(
       id: id,
@@ -36,11 +43,13 @@ class _$Channel implements Channel {
       this.position,
       this.bitRate,
       this.userLimit});
+
   factory _$Channel(void build(_$ChannelBuilder builder)) {
     final builder = new _$ChannelBuilder();
     build(builder);
     return builder._build();
   }
+
   factory _$Channel.fromJson(Map<String, Object> json) =>
       (new _$ChannelBuilder()
             ..id = json['id'] as String
@@ -51,18 +60,25 @@ class _$Channel implements Channel {
             ..bitRate = json['bitrate'] as int
             ..userLimit = json['userLimit'] as int)
           ._build();
+
   @override
   final String id;
+
   @override
   final String name;
+
   @override
   final String topic;
+
   @override
   final ChannelType type;
+
   @override
   final int position;
+
   @override
   final int bitRate;
+
   @override
   final int userLimit;
 }

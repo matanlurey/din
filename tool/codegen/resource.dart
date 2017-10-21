@@ -26,7 +26,7 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
     return new Class((b) {
       _writeClassDefaults(b, element);
       _implementEndpoints(b, urlRoot, element);
-    }).accept(const DartEmitter()).toString();
+    }).accept(new DartEmitter.scoped()).toString();
   }
 
   static void _writeClassDefaults(ClassBuilder b, ClassElement clazz) => b
@@ -60,14 +60,16 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
     }
   }
 
+  static const _$override = const Reference('override', 'dart:core');
+
   static Method _generateEndpoint(
     String urlRoot,
     ConstantReader endPoint,
     MethodElement method,
   ) =>
       new Method((b) => b
-        ..annotations.add(new Annotation(
-            (b) => b..code = new Code((b) => b..code = 'override')))
+        ..annotations
+            .add(new Annotation((b) => b..code = _$override.annotation().code))
         ..name = method.name
         ..returns = new Reference(method.returnType.displayName)
         ..optionalParameters
@@ -75,8 +77,7 @@ class ResourceGenerator extends GeneratorForAnnotation<meta.Resource> {
               ..name = m.name
               ..named = true
               ..type = new Reference(m.type.displayName))))
-        ..body = new Code((b) => b
-          ..code = '''
+        ..body = new Code.scope((_) => '''
           return _restClient.request(
             url: '${_getUrl(urlRoot, endPoint.read('path').listValue)}',
             method: '${endPoint.read('method').stringValue}',

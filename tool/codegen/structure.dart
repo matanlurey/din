@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart' hide Resource;
 import 'package:code_builder/code_builder.dart';
 import 'package:din/src/schema/metadata.dart' as meta;
@@ -24,12 +25,14 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
       ..body.addAll([
         _generateBuilder(element),
         _generateModel(element),
-      ])).accept(const DartEmitter()).toString();
+      ])).accept(new DartEmitter.scoped()).toString();
   }
 
+  static const _$override = const Reference('override', 'dart:core');
   static const _$DateTime = const TypeChecker.fromRuntime(DateTime);
   static const _$Structure = const TypeChecker.fromRuntime(meta.Structure);
   static const _$Field = const TypeChecker.fromRuntime(meta.Field);
+  static const _$List = const TypeChecker.fromRuntime(List);
 
   static Class _generateBuilder(ClassElement clazz) => new Class((b) => b
     ..name = '_\$${clazz.name}Builder'
@@ -39,8 +42,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
     ..methods.add(new Method((b) => b
       ..name = '_build'
       ..returns = new Reference('_\$${clazz.name}')
-      ..body = new Code((b) => b
-        ..code = '''return new _\$${clazz.name}._internal(
+      ..body = new Code.scope((_) => '''return new _\$${clazz.name}._internal(
           ${clazz.accessors.map((a) => '${a.name}: ${a.name}').join(', ')},
         );'''))));
 
@@ -49,8 +51,8 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
     ..implements.add(new Reference(clazz.name))
     ..fields.addAll(clazz.accessors.map((a) => new Field((b) => b
       ..name = a.name
-      ..annotations.add(new Annotation(
-          (b) => b..code = new Code((b) => b..code = 'override')))
+      ..annotations
+          .add(new Annotation((b) => b..code = _$override.annotation().code))
       ..type = new Reference(a.returnType.displayName)
       ..modifier = FieldModifier.final$)))
     ..constructors.addAll([
@@ -64,12 +66,11 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
               ..toThis = true)))),
       new Constructor((b) => b
         ..factory = true
-        ..body = new Code((b) => b..code = 'return null;')
+        ..body = const Code('return null;')
         ..requiredParameters.add(new Parameter(
           (b) => b..name = 'void build(_\$${clazz.name}Builder builder)',
         ))
-        ..body = new Code((b) => b
-          ..code = '''
+        ..body = new Code.scope((_) => '''
             final builder = new _\$${clazz.name}Builder();
             build(builder);
             return builder._build();
@@ -78,8 +79,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
         ..factory = true
         ..name = 'fromJson'
         ..lambda = true
-        ..body = new Code((b) => b
-          ..code = '''
+        ..body = new Code.scope((_) => '''
           (new _\$${clazz.name}Builder()
           ${clazz.accessors.map((a) {
             final metadata = _$Field.firstAnnotationOfExact(a);
@@ -96,6 +96,11 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
                 return '..${a.name} = DateTime.parse(json[\'$name\'] as String)';
               } else if (element.type.isObject) {
                 return '..${a.name} = json[\'$name\']';
+              } else if (_$List.isExactly(element) && a.returnType is ParameterizedType) {
+                final paramElement = (a.returnType as ParameterizedType).typeArguments.first.element;
+                if (_$Structure.hasAnnotationOfExact(paramElement)) {
+                  return '..${a.name} = (json[\'$name\'] as List<Map<String, Object>>).map((e) => new ${paramElement.name}.fromJson(e)).toList()';
+                }
               }
             }
             return '..${a.name} = json[\'$name\'] as $display';

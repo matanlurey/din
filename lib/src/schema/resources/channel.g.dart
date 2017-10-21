@@ -8,7 +8,9 @@ part of 'channel.dart';
 
 class _$ChannelsResource implements ChannelsResource {
   _$ChannelsResource(this._restClient);
+
   final RestClient _restClient;
+
   @override
   Future<Channel> getChannel({String id}) {
     return _restClient
