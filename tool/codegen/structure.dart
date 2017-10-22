@@ -89,7 +89,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
             final display = a.returnType.displayName;
             if (element is ClassElement) {
               if (element.isEnum) {
-                return '..${a.name} = $display.values[json[\'$name\'] as int]';
+                return '..${a.name} = json.containsKey(\'$name\') ?  $display.values[json[\'$name\'] as int: null]';
               } else if (_$Structure.hasAnnotationOfExact(element)) {
                 return '..${a.name} = new $display.fromJson(json[\'$name\'] as Map<String, Object>)';
               } else if (_$DateTime.isExactlyType(a.returnType)) {
