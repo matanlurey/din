@@ -31,14 +31,14 @@ class GatewayEvents {
       } catch (e, s) {
         // TODO: It would be preferable to only catch precisely parse errors.
         final json = const JsonEncoder.withIndent('  ').convert(event.data);
-        throw new FormatException(
-          ''
+        Zone.current.handleUncaughtError<Null>(
+          new FormatException(''
               'Failed to parse incoming event ${event.name}\n'
               '\n\n'
               'JSON:\n'
               '$json\n'
-              'Source: $e\n'
-              '$s\n',
+              'Source: $e\n'),
+          s,
         );
       }
     });
