@@ -101,10 +101,7 @@ class VmWebSocketClient implements din.WebSocketClient {
 
   @override
   Future<String> get onClose => _socket.done.then((Object reason) {
-        if (reason is WebSocket) {
-          return null;
-        }
-        if (reason != null) {
+        if (reason is! WebSocket && reason != null) {
           return reason.toString();
         }
         return _socket.closeReason;
