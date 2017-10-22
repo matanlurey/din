@@ -93,13 +93,13 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
               } else if (_$Structure.hasAnnotationOfExact(element)) {
                 return '..${a.name} = new $display.fromJson(json[\'$name\'] as Map<String, Object>)';
               } else if (_$DateTime.isExactlyType(a.returnType)) {
-                return '..${a.name} = DateTime.parse(json[\'$name\'] as String)';
+                return '..${a.name} = json.containsKey(\'$name\') ? DateTime.parse(json[\'$name\'] as String) : null';
               } else if (element.type.isObject) {
                 return '..${a.name} = json[\'$name\']';
               } else if (_$List.isExactly(element) && a.returnType is ParameterizedType) {
                 final paramElement = (a.returnType as ParameterizedType).typeArguments.first.element;
                 if (_$Structure.hasAnnotationOfExact(paramElement)) {
-                  return '..${a.name} = (json[\'$name\'] as List<Map<String, Object>>).map((e) => new ${paramElement.name}.fromJson(e)).toList()';
+                  return '..${a.name} = (json.containsKey(\'$name\') ? json[\'$name\'] as List<Map<String, Object>> : const <Map<String, Object>>[]).map((e) => new ${paramElement.name}.fromJson(e)).toList()';
                 }
               }
             }

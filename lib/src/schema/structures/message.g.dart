@@ -69,9 +69,13 @@ class _$Message implements Message {
             ..channelId = json['channel_id'] as String
             ..content = json['content'] as String
             ..user = new User.fromJson(json['author'] as Map<String, Object>)
-            ..timeStamp = DateTime.parse(json['timestamp'] as String)
+            ..timeStamp = json.containsKey('timestamp')
+                ? DateTime.parse(json['timestamp'] as String)
+                : null
             ..mentionsEveryone = json['mentions_everyone'] as bool
-            ..mentions = (json['mentions'] as List<Map<String, Object>>)
+            ..mentions = (json.containsKey('mentions')
+                    ? json['mentions'] as List<Map<String, Object>>
+                    : const <Map<String, Object>>[])
                 .map((e) => new User.fromJson(e))
                 .toList()
             ..nonce = json['nonce'] as String

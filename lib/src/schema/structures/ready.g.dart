@@ -47,10 +47,11 @@ class _$Ready implements Ready {
       : (new _$ReadyBuilder()
             ..version = json['v'] as int
             ..user = new User.fromJson(json['user'] as Map<String, Object>)
-            ..privateChannels =
-                (json['private_channels'] as List<Map<String, Object>>)
-                    .map((e) => new Channel.fromJson(e))
-                    .toList()
+            ..privateChannels = (json.containsKey('private_channels')
+                    ? json['private_channels'] as List<Map<String, Object>>
+                    : const <Map<String, Object>>[])
+                .map((e) => new Channel.fromJson(e))
+                .toList()
             ..sessionId = json['session_id'] as String
             ..trace = json['_trade'] as List<String>)
           ._build();
