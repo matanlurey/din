@@ -80,7 +80,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
         ..name = 'fromJson'
         ..lambda = true
         ..body = new Code.scope((_) => '''
-          (new _\$${clazz.name}Builder()
+          json == null ? null : (new _\$${clazz.name}Builder()
           ${clazz.accessors.map((a) {
             final metadata = _$Field.firstAnnotationOfExact(a);
             final reader = new ConstantReader(metadata);

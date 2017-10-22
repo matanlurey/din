@@ -28,8 +28,9 @@ class _$Gateway implements Gateway {
     return builder._build();
   }
 
-  factory _$Gateway.fromJson(Map<String, Object> json) =>
-      (new _$GatewayBuilder()
+  factory _$Gateway.fromJson(Map<String, Object> json) => json == null
+      ? null
+      : (new _$GatewayBuilder()
             ..url = json['url'] as String
             ..shards = json['shards'] as int)
           ._build();
@@ -70,8 +71,9 @@ class _$GatewayDispatch implements GatewayDispatch {
     return builder._build();
   }
 
-  factory _$GatewayDispatch.fromJson(Map<String, Object> json) =>
-      (new _$GatewayDispatchBuilder()
+  factory _$GatewayDispatch.fromJson(Map<String, Object> json) => json == null
+      ? null
+      : (new _$GatewayDispatchBuilder()
             ..op = GatewayOpcode.values[json['op'] as int]
             ..data = json['d']
             ..sequence = json['s'] as int
