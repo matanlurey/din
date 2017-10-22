@@ -22,27 +22,23 @@ class GatewayEvents {
 
   /// Create a listener to a raw [events] stream from a gateway server.
   GatewayEvents(Stream<GatewayDispatch> events, this._onSequenceUpdate) {
-    Zone.current.runGuarded(() {
-      events.listen((event) {
-        if (event.sequence != null) {
-          _onSequenceUpdate.add(event.sequence);
-        }
-        try {
-          _parseEvent(event);
-        } catch (e, s) {
-          // TODO: It would be preferable to only catch precisely parse errors.
-          final json = const JsonEncoder.withIndent('  ').convert(event.data);
-          Zone.current.handleUncaughtError<Null>(
-            new FormatException(''
-                'Failed to parse incoming event ${event.name}\n'
-                '\n\n'
-                'JSON:\n'
-                '$json\n'
-                'Source: $e\n'),
-            s,
-          );
-        }
-      });
+    events.listen((event) {
+      if (event.sequence != null) {
+        _onSequenceUpdate.add(event.sequence);
+      }
+      try {
+        _parseEvent(event);
+      } catch (e, s) {
+        // TODO: It would be preferable to only catch precisely parse errors.
+        final json = const JsonEncoder.withIndent('  ').convert(event.data);
+        throw new FormatException(''
+            'Failed to parse incoming event ${event.name}\n'
+            '\n\n'
+            'JSON:\n'
+            '$json\n'
+            'Source: $e\n'
+            'Stack: $s');
+      }
     });
   }
 
