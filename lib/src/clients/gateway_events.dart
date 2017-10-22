@@ -42,7 +42,7 @@ class GatewayEvents {
             s,
           );
         }
-      };
+      });
     });
   }
 
