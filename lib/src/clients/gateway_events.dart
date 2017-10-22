@@ -41,7 +41,7 @@ class GatewayEvents {
           s,
         );
       }
-    });
+    }, cancelOnError: false);
   }
 
   void _parseEvent(GatewayDispatch event) {
