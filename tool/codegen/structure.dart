@@ -21,7 +21,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    return new File((b) => b
+    return new Library((b) => b
       ..body.addAll([
         _generateBuilder(element),
         _generateModel(element),
