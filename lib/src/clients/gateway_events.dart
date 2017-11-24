@@ -16,6 +16,7 @@ class GatewayEvents {
   final _channelDelete = new StreamController<Channel>.broadcast();
   final _messageCreate = new StreamController<Message>.broadcast();
   final _messageUpdate = new StreamController<Message>.broadcast();
+  final _unknownEvent = new StreamController<GatewayDispatch>.broadcast();
   final _ready = new StreamController<Ready>.broadcast();
 
   final StreamSink<int> _onSequenceUpdate;
@@ -74,8 +75,15 @@ class GatewayEvents {
           event.data as Map<String, Object>,
         ));
         break;
+      default:
+        _unknownEvent.add(event);
     }
   }
+
+  /// Sent when an event that is not parsed into another category is received.
+  ///
+  /// Mainly useful for debugging/logging of unsupported events.
+  Stream<GatewayDispatch> get unknownEvent => _unknownEvent.stream;
 
   /// Sent when a new channel is created, relevant to the current user.
   Stream<Channel> get channelCreate => _channelCreate.stream;
@@ -113,7 +121,9 @@ class GatewayEvents {
   // TODO: Message Reaction Add.
   // TODO: Message Reaction Remove.
   // TODO: Message Reaction Remove All.
-  // TODO: Presence Update.
+
+  // TODO: Stream<Object> get presenceUpdate => _presenceUpdate.stream;
+
   // TODO: Typing Start.
   // TODO: User Update.
   // TODO: Voice State Update.

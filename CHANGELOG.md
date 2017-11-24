@@ -1,3 +1,5 @@
+* Added `GatewayEvents.unknownEvent` for debugging/feature requests.
+
 ## 0.1.0-alpha+8
 
 * Made JSON parse failures more debuggable - throws a `FormatException`.
