@@ -7,15 +7,19 @@ import 'dart:convert';
 
 import '../schema/structures/channel.dart';
 import '../schema/structures/gateway.dart';
+import '../schema/structures/guild.dart';
 import '../schema/structures/message.dart';
+import '../schema/structures/presence.dart';
 import '../schema/structures/ready.dart';
 
 class GatewayEvents {
   final _channelCreate = new StreamController<Channel>.broadcast();
   final _channelUpdate = new StreamController<Channel>.broadcast();
   final _channelDelete = new StreamController<Channel>.broadcast();
+  final _guildCreate = new StreamController<Guild>.broadcast();
   final _messageCreate = new StreamController<Message>.broadcast();
   final _messageUpdate = new StreamController<Message>.broadcast();
+  final _presenceUpdate = new StreamController<PresenceUpdate>.broadcast();
   final _unknownEvent = new StreamController<GatewayDispatch>.broadcast();
   final _ready = new StreamController<Ready>.broadcast();
 
@@ -60,6 +64,11 @@ class GatewayEvents {
           event.data as Map<String, Object>,
         ));
         break;
+      case 'GUILD_CREATE':
+        _guildCreate.add(new Guild.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
       case 'MESSAGE_CREATE':
         _messageCreate.add(new Message.fromJson(
           event.data as Map<String, Object>,
@@ -67,6 +76,11 @@ class GatewayEvents {
         break;
       case 'MESSAGE_UPDATE':
         _messageUpdate.add(new Message.fromJson(
+          event.data as Map<String, Object>,
+        ));
+        break;
+      case 'PRESENCE_UPDATE':
+        _presenceUpdate.add(new PresenceUpdate.fromJson(
           event.data as Map<String, Object>,
         ));
         break;
@@ -95,7 +109,10 @@ class GatewayEvents {
   Stream<Channel> get channelDelete => _channelDelete.stream;
 
   // TODO: Channel Pins Update.
-  // TODO: Guild Create.
+
+  /// Sent on initial creation or connection to a guild.
+  Stream<Guild> get guildCreate => _guildCreate.stream;
+
   // TODO: Guild Update.
   // TODO: Guild Delete.
   // TODO: Guild Ban Add.
@@ -122,7 +139,8 @@ class GatewayEvents {
   // TODO: Message Reaction Remove.
   // TODO: Message Reaction Remove All.
 
-  // TODO: Stream<Object> get presenceUpdate => _presenceUpdate.stream;
+  /// Sent when a user's presence is updated.
+  Stream<PresenceUpdate> get presenceUpdate => _presenceUpdate.stream;
 
   // TODO: Typing Start.
   // TODO: User Update.
