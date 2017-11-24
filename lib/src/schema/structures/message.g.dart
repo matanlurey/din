@@ -80,7 +80,9 @@ class _$Message implements Message {
                 .toList()
             ..nonce = json['nonce'] as String
             ..isPinned = json['pinned'] as bool
-            ..type = MessageType.values[json['type'] as int])
+            ..type = json.containsKey('type')
+                ? MessageType.values[json['type'] as int]
+                : null)
           ._build();
 
   @override

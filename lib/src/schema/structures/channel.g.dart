@@ -56,7 +56,9 @@ class _$Channel implements Channel {
             ..id = json['id'] as String
             ..name = json['name'] as String
             ..topic = json['topic'] as String
-            ..type = ChannelType.values[json['type'] as int]
+            ..type = json.containsKey('type')
+                ? ChannelType.values[json['type'] as int]
+                : null
             ..position = json['position'] as int
             ..bitRate = json['bitrate'] as int
             ..userLimit = json['userLimit'] as int)

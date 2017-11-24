@@ -74,7 +74,9 @@ class _$GatewayDispatch implements GatewayDispatch {
   factory _$GatewayDispatch.fromJson(Map<String, Object> json) => json == null
       ? null
       : (new _$GatewayDispatchBuilder()
-            ..op = GatewayOpcode.values[json['op'] as int]
+            ..op = json.containsKey('op')
+                ? GatewayOpcode.values[json['op'] as int]
+                : null
             ..data = json['d']
             ..sequence = json['s'] as int
             ..name = json['t'] as String)
