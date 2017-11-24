@@ -50,12 +50,15 @@ class _$Channel implements Channel {
     return builder._build();
   }
 
-  factory _$Channel.fromJson(Map<String, Object> json) =>
-      (new _$ChannelBuilder()
+  factory _$Channel.fromJson(Map<String, Object> json) => json == null
+      ? null
+      : (new _$ChannelBuilder()
             ..id = json['id'] as String
             ..name = json['name'] as String
             ..topic = json['topic'] as String
-            ..type = ChannelType.values[json['type'] as int]
+            ..type = json.containsKey('type')
+                ? ChannelType.values[json['type'] as int]
+                : null
             ..position = json['position'] as int
             ..bitRate = json['bitrate'] as int
             ..userLimit = json['userLimit'] as int)

@@ -28,10 +28,12 @@ class _$User implements User {
     return builder._build();
   }
 
-  factory _$User.fromJson(Map<String, Object> json) => (new _$UserBuilder()
-        ..id = json['id'] as String
-        ..name = json['username'] as String)
-      ._build();
+  factory _$User.fromJson(Map<String, Object> json) => json == null
+      ? null
+      : (new _$UserBuilder()
+            ..id = json['id'] as String
+            ..name = json['username'] as String)
+          ._build();
 
   @override
   final String id;

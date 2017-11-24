@@ -62,20 +62,27 @@ class _$Message implements Message {
     return builder._build();
   }
 
-  factory _$Message.fromJson(Map<String, Object> json) =>
-      (new _$MessageBuilder()
+  factory _$Message.fromJson(Map<String, Object> json) => json == null
+      ? null
+      : (new _$MessageBuilder()
             ..id = json['id'] as String
             ..channelId = json['channel_id'] as String
             ..content = json['content'] as String
             ..user = new User.fromJson(json['author'] as Map<String, Object>)
-            ..timeStamp = DateTime.parse(json['timestamp'] as String)
+            ..timeStamp = json.containsKey('timestamp')
+                ? DateTime.parse(json['timestamp'] as String)
+                : null
             ..mentionsEveryone = json['mentions_everyone'] as bool
-            ..mentions = (json['mentions'] as List<Map<String, Object>>)
+            ..mentions = (json.containsKey('mentions')
+                    ? json['mentions'] as List<Map<String, Object>>
+                    : const <Map<String, Object>>[])
                 .map((e) => new User.fromJson(e))
                 .toList()
             ..nonce = json['nonce'] as String
             ..isPinned = json['pinned'] as bool
-            ..type = MessageType.values[json['type'] as int])
+            ..type = json.containsKey('type')
+                ? MessageType.values[json['type'] as int]
+                : null)
           ._build();
 
   @override

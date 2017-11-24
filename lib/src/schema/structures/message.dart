@@ -25,7 +25,7 @@ abstract class Message {
   @Field(name: 'content')
   String get content;
 
-  @Field(name: 'author')
+  @Field(name: 'author', optional: true)
   User get user;
 
   @Field(name: 'timestamp')

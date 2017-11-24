@@ -21,7 +21,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    return new File((b) => b
+    return new Library((b) => b
       ..body.addAll([
         _generateBuilder(element),
         _generateModel(element),
@@ -80,7 +80,7 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
         ..name = 'fromJson'
         ..lambda = true
         ..body = new Code.scope((_) => '''
-          (new _\$${clazz.name}Builder()
+          json == null ? null : (new _\$${clazz.name}Builder()
           ${clazz.accessors.map((a) {
             final metadata = _$Field.firstAnnotationOfExact(a);
             final reader = new ConstantReader(metadata);
@@ -89,17 +89,17 @@ class StructureGenerator extends GeneratorForAnnotation<meta.Structure> {
             final display = a.returnType.displayName;
             if (element is ClassElement) {
               if (element.isEnum) {
-                return '..${a.name} = $display.values[json[\'$name\'] as int]';
+                return '..${a.name} = json.containsKey(\'$name\') ?  $display.values[json[\'$name\'] as int]: null';
               } else if (_$Structure.hasAnnotationOfExact(element)) {
                 return '..${a.name} = new $display.fromJson(json[\'$name\'] as Map<String, Object>)';
               } else if (_$DateTime.isExactlyType(a.returnType)) {
-                return '..${a.name} = DateTime.parse(json[\'$name\'] as String)';
+                return '..${a.name} = json.containsKey(\'$name\') ? DateTime.parse(json[\'$name\'] as String) : null';
               } else if (element.type.isObject) {
                 return '..${a.name} = json[\'$name\']';
               } else if (_$List.isExactly(element) && a.returnType is ParameterizedType) {
                 final paramElement = (a.returnType as ParameterizedType).typeArguments.first.element;
                 if (_$Structure.hasAnnotationOfExact(paramElement)) {
-                  return '..${a.name} = (json[\'$name\'] as List<Map<String, Object>>).map((e) => new ${paramElement.name}.fromJson(e)).toList()';
+                  return '..${a.name} = (json.containsKey(\'$name\') ? json[\'$name\'] as List<Map<String, Object>> : const <Map<String, Object>>[]).map((e) => new ${paramElement.name}.fromJson(e)).toList()';
                 }
               }
             }

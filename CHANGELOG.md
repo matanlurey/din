@@ -1,3 +1,8 @@
+## 0.1.0-alpha+8
+
+* Made JSON parse failures more debuggable - throws a `FormatException`.
+* Fixed a number of subtle bugs in the generated JSON parsers. 
+
 ## 0.1.0-alpha+7
 
 * Updated to `code_builder: ^2.0.0-alpha+3`.
