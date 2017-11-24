@@ -1,4 +1,5 @@
 * Added `GatewayEvents.unknownEvent` for debugging/feature requests.
+* Added `GatewayEvents.{presenceUpdate,guildCreate}`.
 
 ## 0.1.0-alpha+8
 
