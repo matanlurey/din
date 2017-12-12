@@ -1,7 +1,7 @@
 name: din
 description: >
   Dart API for Discord.
-version: 0.1.0-alpha+8
+version: 0.1.0-alpha+9
 authors:
   - Matan Lurey <matanl@google.com>
 homepage: https://github.com/matanlurey/din
